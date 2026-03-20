@@ -325,8 +325,8 @@ const renderExpensesTable = () => {
                         </td>
                         <td style="font-weight: 700;">${formatCurrency(tx.amount)}</td>
                         <td>
-                            <button class="btn-logout" onclick="openEditModal(${tx.id}, '${tx.type}')" title="Edit" style="color: var(--accent-light);">✏️</button>
-                            <button class="btn-logout" onclick="deleteTransaction(${tx.id}, '${tx.type}')" title="Delete">🗑️</button>
+                            <button class="btn-logout" onclick="openEditModal('${tx.id}', '${tx.type}')" title="Edit" style="color: var(--accent-light);">✏️</button>
+                            <button class="btn-logout" onclick="deleteTransaction('${tx.id}', '${tx.type}')" title="Delete">🗑️</button>
                         </td>
                     </tr>
                 `).join('')}
@@ -422,7 +422,7 @@ const renderSavingsGoals = () => {
                     <h3 style="margin: 0 0 4px 0; font-size: 20px; font-weight: 700;">${goal.name}</h3>
                     <div style="font-size: 13px; color: var(--text-muted);">Deadline: ${formatDate(goal.deadline)}</div>
                 </div>
-                <button class="btn-logout" onclick="deleteGoal(${goal.id})" title="Delete Goal">🗑️</button>
+                <button class="btn-logout" onclick="deleteGoal('${goal.id}')" title="Delete Goal">🗑️</button>
             </div>
             
             <div style="margin-bottom: 20px;">
@@ -439,7 +439,7 @@ const renderSavingsGoals = () => {
             </div>
 
             <div style="display: flex; gap: 8px;">
-                <button class="btn btn-primary btn-full" style="padding: 8px; font-size: 13px;" onclick="addSavings(${goal.id})">+ Add Savings</button>
+                <button class="btn btn-primary btn-full" style="padding: 8px; font-size: 13px;" onclick="addSavings('${goal.id}')">+ Add Savings</button>
             </div>
         </div>
     `).join('');

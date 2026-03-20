@@ -81,10 +81,10 @@ public class BudgetController {
     private BudgetResponse mapToResponse(User user, Budget budget) {
         // Since we moved to Mongo, we calculate the sum in code for now
         Double spent = expenseRepository.findByUserAndCategory(user, budget.getCategory()).stream()
-                .filter(e -> e.getCreatedAt() != null && 
+                .filter(e -> e != null && e.getCreatedAt() != null && 
                             e.getCreatedAt().getMonthValue() == budget.getMonth() && 
                             e.getCreatedAt().getYear() == budget.getYear())
-                .mapToDouble(com.budgetwise.model.Expense::getAmount)
+                .mapToDouble(e -> e.getAmount() != null ? e.getAmount() : 0.0)
                 .sum();
         
         return BudgetResponse.builder()
