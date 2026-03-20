@@ -53,9 +53,31 @@ public class ExpenseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Expense> getExpense(@PathVariable Long id) {
+    public ResponseEntity<Expense> getExpense(@PathVariable String id) {
         return expenseRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Expense> updateExpense(@PathVariable String id, @RequestBody ExpenseRequest request) {
+        return expenseRepository.findById(id)
+                .map(expense -> {
+                    expense.setDescription(request.getDescription());
+                    expense.setAmount(request.getAmount());
+                    expense.setCategory(request.getCategory());
+                    return ResponseEntity.ok(expenseRepository.save(expense));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable String id) {
+        if (expenseRepository.existsById(id)) {
+            expenseRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
+

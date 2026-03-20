@@ -1,13 +1,13 @@
 package com.budgetwise.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "USERS")
+@Document(collection = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,34 +15,23 @@ import lombok.NoArgsConstructor;
 public class User {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     
-    @Column(unique = true, nullable = false)
     private String email;
     
-    @Column(nullable = false)
     private String password;
     
-    @Column(nullable = false)
     private String firstName;
     
-    @Column(nullable = false)
     private String lastName;
     
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
     
-    @Column(nullable = false)
     private Double income;
     
-    @Column(nullable = false)
     private Double savingsGoal;
     
-    @Column(nullable = false)
     private Double targetExpenses;
     
-    @Column(nullable = false)
     private boolean enabled;
 }

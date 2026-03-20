@@ -1,14 +1,15 @@
 package com.budgetwise.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "EXPENSES")
+@Document(collection = "expenses")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,22 +17,16 @@ import java.time.LocalDateTime;
 public class Expense {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @DBRef
     private User user;
     
-    @Column(nullable = false)
     private String description;
     
-    @Column(nullable = false)
     private Double amount;
     
-    @Column(nullable = false)
     private String category;
     
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 }

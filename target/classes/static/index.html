@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BudgetWise — Smart Expense Tracker</title>
+  <meta name="description" content="BudgetWise — Track your expenses intelligently, manage budgets and hit your savings goals." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- AUTH PAGES -->
+  <div id="authSection">
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="auth-page active">
+      <div class="auth-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+      </div>
+      <div class="auth-container">
+        <div class="auth-card glass-card">
+          <div class="auth-logo">
+            <div class="logo-icon">💰</div>
+            <h1 class="logo-text">BudgetWise</h1>
+            <p class="logo-tagline">Smart Money. Smart Life.</p>
+          </div>
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-sub">Sign in to your account to continue</p>
+
+          <div id="loginError" class="alert alert-error hidden"></div>
+
+          <form id="loginForm" class="auth-form">
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">Email Address</label>
+              <div class="input-wrapper">
+                <span class="input-icon">✉️</span>
+                <input id="loginEmail" type="email" class="form-input" placeholder="you@example.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="loginPassword">Password</label>
+              <div class="input-wrapper">
+                <span class="input-icon">🔒</span>
+                <input id="loginPassword" type="password" class="form-input" placeholder="••••••••" required />
+                <button type="button" id="toggleLoginPw" class="pw-toggle">👁</button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+              <span class="btn-text">Sign In</span>
+              <span class="btn-loader hidden"></span>
+            </button>
+          </form>
+
+          <div class="auth-divider"><span>OR</span></div>
+
+          <p class="auth-switch">
+            Don't have an account?
+            <a href="#" id="goToRegister" class="link">Create one →</a>
+          </p>
+
+          <div class="demo-creds">
+            <p class="demo-title">Demo Credentials</p>
+            <code>admin@budgetwise.com / admin123</code>
+          </div>
+        </div>
+
+        <div class="auth-hero">
+          <div class="hero-content">
+            <h2 class="hero-title">Take Control of Your Finances</h2>
+            <p class="hero-sub">Track expenses, set budgets, and reach your savings goals — all in one beautiful dashboard.</p>
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <span class="hero-stat-value">₹12,450</span>
+
+                <span class="hero-stat-label">Saved This Year</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-value">94%</span>
+                <span class="hero-stat-label">Budget Accuracy</span>
+              </div>
+              <div class="hero-stat">
+                <span class="hero-stat-value">156</span>
+                <span class="hero-stat-label">Transactions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER PAGE -->
+    <div id="registerPage" class="auth-page">
+      <div class="auth-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+      </div>
+      <div class="auth-container">
+        <div class="auth-card glass-card">
+          <div class="auth-logo">
+            <div class="logo-icon">💰</div>
+            <h1 class="logo-text">BudgetWise</h1>
+          </div>
+          <h2 class="auth-title">Create Account</h2>
+          <p class="auth-sub">Start your financial journey today</p>
+
+          <div id="registerError" class="alert alert-error hidden"></div>
+          <div id="registerSuccess" class="alert alert-success hidden"></div>
+
+          <form id="registerForm" class="auth-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regFirstName">First Name</label>
+                <input id="regFirstName" type="text" class="form-input" placeholder="John" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regLastName">Last Name</label>
+                <input id="regLastName" type="text" class="form-input" placeholder="Doe" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regEmail">Email Address</label>
+              <input id="regEmail" type="email" class="form-input" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Password</label>
+              <input id="regPassword" type="password" class="form-input" placeholder="Min 6 characters" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regIncome">Monthly Income (₹)</label>
+                <input id="regIncome" type="number" class="form-input" placeholder="5000" required min="0" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regTarget">Target Expenses (₹)</label>
+                <input id="regTarget" type="number" class="form-input" placeholder="3000" required min="0" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regSavings">Savings Goal (₹)</label>
+
+              <input id="regSavings" type="number" class="form-input" placeholder="2000" required min="0" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="registerBtn">
+              <span class="btn-text">Create Account</span>
+              <span class="btn-loader hidden"></span>
+            </button>
+          </form>
+
+          <div class="auth-divider"><span>OR</span></div>
+
+          <p class="auth-switch">
+            Already have an account?
+            <a href="#" id="goToLogin" class="link">Sign in →</a>
+          </p>
+        </div>
+
+        <div class="auth-hero">
+          <div class="hero-content">
+            <h2 class="hero-title">Your Financial Future Starts Here</h2>
+            <p class="hero-sub">Join thousands of people achieving their money goals with BudgetWise.</p>
+            <div class="feature-list">
+              <div class="feature-item">✅ Smart expense categorization</div>
+              <div class="feature-item">✅ Real-time budget tracking</div>
+              <div class="feature-item">✅ Savings goal progress</div>
+              <div class="feature-item">✅ Visual spending insights</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP (Dashboard) -->
+  <div id="appSection" class="hidden">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="logo-icon small">💰</div>
+          <span class="logo-text">BudgetWise</span>
+        </div>
+        <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-page="expenses" id="nav-expenses">
+          <span class="nav-icon">💸</span>
+          <span class="nav-label">Expenses</span>
+        </a>
+        <a href="#" class="nav-item" data-page="budgets" id="nav-budgets">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Budgets</span>
+        </a>
+        <a href="#" class="nav-item" data-page="savings" id="nav-savings">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-label">Savings</span>
+        </a>
+        <a href="#" class="nav-item" data-page="analytics" id="nav-analytics">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">Analytics</span>
+        </a>
+        <a href="#" class="nav-item" data-page="profile" id="nav-profile">
+          <span class="nav-icon">👤</span>
+          <span class="nav-label">Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info" id="sidebarUser">
+          <div class="user-avatar" id="userAvatar">JD</div>
+          <div class="user-details">
+            <span class="user-name" id="sidebarUserName">John Doe</span>
+            <span class="user-role" id="sidebarUserRole">Member</span>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn-logout" title="Logout">🚪</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h2 class="page-title" id="pageTitle">Dashboard</h2>
+          <span class="page-date" id="pageDate"></span>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-primary" id="addIncomeTopBtn" style="background: linear-gradient(135deg, var(--income-color), #00b894); box-shadow: 0 8px 32px var(--accent-2-glow);">
+            <span>+ Add Income</span>
+          </button>
+          <button class="btn btn-primary" id="addExpenseTopBtn">
+            <span>+ Add Expense</span>
+          </button>
+
+          <div class="notification-bell" id="notifBell" title="Notifications">
+            🔔
+            <span class="notif-dot"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGES -->
+
+      <!-- DASHBOARD PAGE -->
+      <div id="page-dashboard" class="page active">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-income">
+            <div class="kpi-icon">💵</div>
+            <div class="kpi-content">
+              <p class="kpi-label">Monthly Income</p>
+              <h3 class="kpi-value" id="kpiIncome">₹0</h3>
+
+              <p class="kpi-change positive">+5.2% from last month</p>
+            </div>
+            <div class="kpi-sparkline"></div>
+          </div>
+          <div class="kpi-card kpi-expenses">
+            <div class="kpi-icon">💸</div>
+            <div class="kpi-content">
+              <p class="kpi-label">Total Expenses</p>
+              <h3 class="kpi-value" id="kpiExpenses">₹0</h3>
+
+              <p class="kpi-change negative" id="kpiExpensesChange">0% of income</p>
+            </div>
+          </div>
+          <div class="kpi-card kpi-savings">
+            <div class="kpi-icon">🏦</div>
+            <div class="kpi-content">
+              <p class="kpi-label">Savings Goal</p>
+              <h3 class="kpi-value" id="kpiSavings">₹0</h3>
+
+              <div class="kpi-progress-bar">
+                <div class="kpi-progress-fill" id="savingsProgressFill" style="width:0%"></div>
+              </div>
+              <p class="kpi-change" id="kpiSavingsText">0% achieved</p>
+            </div>
+          </div>
+          <div class="kpi-card kpi-balance">
+            <div class="kpi-icon">⚖️</div>
+            <div class="kpi-content">
+              <p class="kpi-label">Net Balance</p>
+              <h3 class="kpi-value" id="kpiBalance">₹0</h3>
+
+              <p class="kpi-change" id="kpiBalanceText">Income - Expenses</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-grid">
+          <div class="chart-card glass-card">
+            <div class="chart-header">
+              <h3 class="chart-title">Spending by Category</h3>
+              <div class="chart-badge">This Month</div>
+            </div>
+            <div class="donut-chart-container">
+              <canvas id="categoryChart"></canvas>
+              <div class="donut-center" id="donutCenter">
+                <span class="donut-total" id="donutTotal">₹0</span>
+
+                <span class="donut-label">Total</span>
+              </div>
+            </div>
+            <div class="chart-legend" id="chartLegend"></div>
+          </div>
+
+          <div class="chart-card glass-card">
+            <div class="chart-header">
+              <h3 class="chart-title">Budget Overview</h3>
+              <div class="chart-badge">Monthly</div>
+            </div>
+            <div class="budget-bars" id="budgetBars">
+              <div class="budget-bar-item">
+                <div class="budget-bar-labels">
+                  <span>Income</span>
+                  <span id="budgetIncomeLbl">₹0</span>
+
+                </div>
+                <div class="budget-bar-track">
+                  <div class="budget-bar-fill income-fill" id="budgetIncomeFill" style="width:100%"></div>
+                </div>
+              </div>
+              <div class="budget-bar-item">
+                <div class="budget-bar-labels">
+                  <span>Expenses</span>
+                  <span id="budgetExpLbl">₹0</span>
+
+                </div>
+                <div class="budget-bar-track">
+                  <div class="budget-bar-fill expense-fill" id="budgetExpFill" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="budget-bar-item">
+                <div class="budget-bar-labels">
+                  <span>Savings Goal</span>
+                  <span id="budgetSavLbl">₹0</span>
+
+                </div>
+                <div class="budget-bar-track">
+                  <div class="budget-bar-fill savings-fill" id="budgetSavFill" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="budget-bar-item">
+                <div class="budget-bar-labels">
+                  <span>Target Expenses</span>
+                  <span id="budgetTargLbl">₹0</span>
+
+                </div>
+                <div class="budget-bar-track">
+                  <div class="budget-bar-fill target-fill" id="budgetTargFill" style="width:0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="section-card glass-card">
+          <div class="section-header">
+            <h3 class="section-title">Recent Transactions</h3>
+            <a href="#" class="link see-all" id="seeAllExpenses">See All →</a>
+          </div>
+          <div id="recentTransactions" class="transactions-list">
+            <div class="empty-state">
+              <div class="empty-icon">📭</div>
+              <p>No transactions yet. Add your first expense!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPENSES PAGE -->
+      <div id="page-expenses" class="page">
+        <div class="expenses-toolbar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="expenseSearch" class="search-input" placeholder="Search expenses…" />
+          </div>
+          <select id="categoryFilter" class="filter-select">
+            <option value="">All Categories</option>
+            <option value="Food">🍔 Food</option>
+            <option value="Travel">✈️ Travel</option>
+            <option value="Housing">🏠 Housing</option>
+            <option value="Entertainment">🎬 Entertainment</option>
+
+            <option value="Healthcare">🏥 Healthcare</option>
+            <option value="Shopping">🛍️ Shopping</option>
+            <option value="Education">📚 Education</option>
+            <option value="Other">📦 Other</option>
+          </select>
+          <button class="btn btn-primary" id="addExpensePageBtn">+ Add Expense</button>
+        </div>
+
+        <div class="section-card glass-card">
+          <div id="expensesTable">
+            <div class="empty-state">
+              <div class="empty-icon">📭</div>
+              <p>No expenses found. Add one to get started!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUDGETS PAGE -->
+      <div id="page-budgets" class="page">
+        <div class="section-card glass-card">
+          <div class="section-header">
+            <h3 class="section-title">Monthly Category Budgets</h3>
+            <div class="budget-month-selector">
+                <input type="month" id="budgetMonthPicker" class="form-input" style="width: auto;">
+            </div>
+          </div>
+          <p class="muted" style="margin-bottom: 24px;">Set monthly spending limits for each category to track your progress.</p>
+          <div id="budgetList" class="budget-management-list">
+             <!-- Budget items will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVINGS PAGE -->
+      <div id="page-savings" class="page">
+        <div class="section-header">
+          <h2 class="section-title">Savings Goals</h2>
+          <button class="btn btn-primary" id="addGoalBtn">+ New Goal</button>
+        </div>
+        <div id="savingsGoalsGrid" class="goals-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+           <div class="empty-state">
+              <div class="empty-icon">🎯</div>
+              <p>You haven't defined any specific savings goals yet. Create one to start monitoring your progress!</p>
+           </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS PAGE -->
+      <div id="page-analytics" class="page">
+        <div class="analytics-grid">
+          <div class="chart-card glass-card full-width">
+            <div class="chart-header">
+              <h3 class="chart-title">📈 Spending Trends</h3>
+              <div class="chart-badge">Last 30 days</div>
+            </div>
+            <canvas id="trendsChart" height="120"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <div class="chart-header">
+              <h3 class="chart-title">🗂 Category Breakdown</h3>
+            </div>
+            <canvas id="categoryBarChart" height="200"></canvas>
+          </div>
+          <div class="chart-card glass-card">
+            <div class="chart-header">
+              <h3 class="chart-title">📊 Budget vs Actual</h3>
+            </div>
+            <div class="stat-list" id="analyticsStatList">
+              <p class="muted">Loading data...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE PAGE -->
+      <div id="page-profile" class="page">
+        <div class="profile-grid">
+          <div class="profile-card glass-card">
+            <div class="profile-avatar-lg" id="profileAvatarLg">JD</div>
+            <h2 class="profile-name" id="profileFullName">John Doe</h2>
+            <p class="profile-email" id="profileEmail">john@example.com</p>
+            <div class="profile-badge" id="profileRole">Member</div>
+            <div class="profile-stats-row">
+              <div class="profile-stat">
+                <span class="profile-stat-val" id="profileExpCount">0</span>
+                <span class="profile-stat-label">Expenses</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat-val" id="profileTotalSpent">₹0</span>
+
+                <span class="profile-stat-label">Total Spent</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-details glass-card">
+            <h3 class="section-title">Financial Settings</h3>
+            <div class="detail-item">
+              <span class="detail-label">Monthly Income</span>
+              <span class="detail-value" id="detailIncome">₹0</span>
+
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Savings Goal</span>
+              <span class="detail-value" id="detailSavings">₹0</span>
+
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Target Expenses</span>
+              <span class="detail-value" id="detailTarget">₹0</span>
+
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Account Status</span>
+              <span class="detail-value status-active">✅ Active</span>
+            </div>
+            <div class="savings-progress-wrap">
+              <div class="savings-progress-header">
+                <span>Savings Progress</span>
+                <span id="profileSavPct">0%</span>
+              </div>
+              <div class="savings-track">
+                <div class="savings-fill" id="profileSavFill" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ADD INCOME MODAL -->
+  <div id="incomeModal" class="modal-overlay hidden">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <h3 class="modal-title">💰 Add New Income</h3>
+        <button class="modal-close" id="closeIncomeModal">✕</button>
+      </div>
+      <form id="incomeForm" class="modal-form">
+        <div class="form-group">
+          <label class="form-label" for="incDesc">Description</label>
+          <input id="incDesc" type="text" class="form-input" placeholder="e.g. Monthly Salary" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="incAmount">Amount (₹)</label>
+
+            <input id="incAmount" type="number" class="form-input" placeholder="0.00" step="0.01" min="0" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="incCategory">Category</label>
+            <select id="incCategory" class="form-input" required>
+              <option value="">Select...</option>
+              <option value="Salary">💼 Salary</option>
+              <option value="Freelance">💻 Freelance</option>
+              <option value="Investment">📈 Investment</option>
+              <option value="Gift">🎁 Gift</option>
+              <option value="Other">📦 Other</option>
+            </select>
+          </div>
+        </div>
+        <div id="incomeModalError" class="alert alert-error hidden"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancelIncome">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveIncomeBtn" style="background: linear-gradient(135deg, var(--income-color), #00b894);">
+            <span class="btn-text">Save Income</span>
+            <span class="btn-loader hidden"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD EXPENSE MODAL -->
+
+  <div id="expenseModal" class="modal-overlay hidden">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ Add New Expense</h3>
+        <button class="modal-close" id="closeModal">✕</button>
+      </div>
+      <form id="expenseForm" class="modal-form">
+        <div class="form-group">
+          <label class="form-label" for="expDesc">Description</label>
+          <input id="expDesc" type="text" class="form-input" placeholder="e.g. Lunch at restaurant" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="expAmount">Amount (₹)</label>
+
+            <input id="expAmount" type="number" class="form-input" placeholder="0.00" step="0.01" min="0" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="expCategory">Category</label>
+            <select id="expCategory" class="form-input" required>
+              <option value="">Select...</option>
+              <option value="Food">🍔 Food</option>
+              <option value="Travel">✈️ Travel</option>
+              <option value="Housing">🏠 Housing</option>
+              <option value="Entertainment">🎬 Entertainment</option>
+
+              <option value="Healthcare">🏥 Healthcare</option>
+              <option value="Shopping">🛍️ Shopping</option>
+              <option value="Education">📚 Education</option>
+              <option value="Other">📦 Other</option>
+            </select>
+          </div>
+        </div>
+        <div id="expenseModalError" class="alert alert-error hidden"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancelExpense">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveExpenseBtn">
+            <span class="btn-text">Save Expense</span>
+            <span class="btn-loader hidden"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SAVINGS GOAL MODAL -->
+  <div id="goalModal" class="modal-overlay hidden">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <h3 class="modal-title">🎯 Create Savings Goal</h3>
+        <button class="modal-close" id="closeGoalModal">✕</button>
+      </div>
+      <form id="goalForm" class="modal-form">
+        <div class="form-group">
+          <label class="form-label" for="goalName">Goal Name</label>
+          <input id="goalName" type="text" class="form-input" placeholder="e.g. New Car, European Trip" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="goalTarget">Target Amount (₹)</label>
+            <input id="goalTarget" type="number" class="form-input" placeholder="0.00" step="0.01" min="1" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="goalCurrent">Starting Amount (₹)</label>
+            <input id="goalCurrent" type="number" class="form-input" placeholder="0.00" step="0.01" min="0" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="goalDeadline">Target Date</label>
+          <input id="goalDeadline" type="date" class="form-input" required />
+        </div>
+        <div id="goalModalError" class="alert alert-error hidden"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancelGoal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveGoalBtn">
+            <span class="btn-text">Create Goal</span>
+            <span class="btn-loader hidden"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden">
+    <span id="toastMsg"></span>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

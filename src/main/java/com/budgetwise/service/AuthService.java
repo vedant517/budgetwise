@@ -69,29 +69,29 @@ public class AuthService {
     }
 
     public void createAdminUser() {
-        if (userRepository.findByEmail("admin@test.com").isEmpty()) {
+        if (userRepository.findByEmail("admin@budgetwise.com").isEmpty()) {
             User admin = User.builder()
-                    .email("admin@test.com")
-                    .password(passwordEncoder.encode("123456"))
+                    .email("admin@budgetwise.com")
+                    .password(passwordEncoder.encode("admin123"))
                     .firstName("Admin")
                     .lastName("User")
-                    .income(100000.0)
-                    .savingsGoal(50000.0)
-                    .targetExpenses(5000.0)
+                    .income(12000.0)
+                    .savingsGoal(5000.0)
+                    .targetExpenses(4000.0)
                     .role(Role.ROLE_ADMIN)
                     .enabled(true)
                     .build();
             userRepository.save(admin);
         }
 
-        if (userRepository.findByEmail("user@test.com").isEmpty()) {
+        if (userRepository.findByEmail("user@budgetwise.com").isEmpty()) {
             User normalUser = User.builder()
-                    .email("user@test.com")
-                    .password(passwordEncoder.encode("123456"))
+                    .email("user@budgetwise.com")
+                    .password(passwordEncoder.encode("user123"))
                     .firstName("John")
                     .lastName("Doe")
-                    .income(50000.0)
-                    .savingsGoal(20000.0)
+                    .income(5000.0)
+                    .savingsGoal(2000.0)
                     .targetExpenses(3000.0)
                     .role(Role.ROLE_USER)
                     .enabled(true)
@@ -100,3 +100,4 @@ public class AuthService {
         }
     }
 }
+
