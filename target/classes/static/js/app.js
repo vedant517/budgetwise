@@ -688,16 +688,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Auth Switch
-    document.getElementById('goToRegister').onclick = (e) => {
-        e.preventDefault();
-        document.getElementById('loginPage').classList.remove('active');
-        document.getElementById('registerPage').classList.add('active');
-    };
-    document.getElementById('goToLogin').onclick = (e) => {
-        e.preventDefault();
-        document.getElementById('registerPage').classList.remove('active');
-        document.getElementById('loginPage').classList.add('active');
-    };
+    document.querySelectorAll('.goToRegisterBtn').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            document.getElementById('loginPage').classList.remove('active');
+            document.getElementById('registerPage').classList.add('active');
+        };
+    });
+    
+    document.querySelectorAll('.goToLoginBtn').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            document.getElementById('registerPage').classList.remove('active');
+            document.getElementById('loginPage').classList.add('active');
+        };
+    });
 
     // Forms
     document.getElementById('loginForm').onsubmit = (e) => {

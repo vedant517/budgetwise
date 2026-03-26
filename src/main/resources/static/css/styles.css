@@ -309,6 +309,16 @@ select.form-input option { background: var(--bg-surface); color: var(--text-prim
 }
 
 .auth-switch { font-size: .875rem; color: var(--text-secondary); text-align: center; }
+.auth-top-switch { 
+  margin-bottom: 1.5rem; 
+  padding: 0.75rem 1rem; 
+  background: rgba(255,255,255,0.03); 
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .link { color: var(--accent-light); text-decoration: none; font-weight: 600; }
 .link:hover { color: var(--accent); text-decoration: underline; }
 
@@ -684,20 +694,50 @@ select.form-input option { background: var(--bg-surface); color: var(--text-prim
 /* ============================================================
    ANALYTICS PAGE
    ============================================================ */
+.analytics-toolbar {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 2rem; padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.analytics-filters { display: flex; align-items: center; gap: 1rem; }
+
 .analytics-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 .full-width { grid-column: 1 / -1; }
 
-.stat-list { display: flex; flex-direction: column; gap: .85rem; }
-.stat-row {
-  display: flex; flex-direction: column; gap: .3rem;
+.chart-container-lg { height: 320px; position: relative; }
+.chart-container-sm { height: 260px; position: relative; }
+
+.donut-chart-container.small { width: 180px; height: 180px; margin: 0 auto; }
+
+.chart-legend-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .75rem;
+  margin-top: 1.5rem; padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.05);
 }
-.stat-row-header { display: flex; justify-content: space-between; font-size: .85rem; color: var(--text-secondary); }
-.stat-row-bar  { height: 8px; border-radius: 4px; background: rgba(255,255,255,.07); overflow: hidden; }
-.stat-row-fill { height: 100%; border-radius: 4px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+
+.legend-item-rich { display: flex; align-items: center; gap: .75rem; }
+.legend-info { display: flex; flex-direction: column; }
+.legend-label { font-size: .8rem; color: var(--text-secondary); font-weight: 500; }
+.legend-val   { font-size: .9rem; font-weight: 700; color: var(--text-primary); }
+.legend-val small { font-weight: 400; color: var(--text-muted); margin-left: .2rem; }
+
+.analytics-summary-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+}
+.summary-stat {
+  padding: 1rem; background: rgba(255,255,255,.03); border-radius: var(--radius-md);
+  display: flex; flex-direction: column; gap: .25rem;
+}
+.summary-label { font-size: .75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.summary-value { font-size: 1.25rem; font-weight: 800; color: var(--accent-light); }
+
+.header-info { display: flex; flex-direction: column; gap: .2rem; }
+
 
 /* ============================================================
    PROFILE PAGE

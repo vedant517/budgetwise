@@ -59,7 +59,7 @@
 
           <p class="auth-switch">
             Don't have an account?
-            <a href="#" id="goToRegister" class="link">Create one →</a>
+            <a href="#" class="goToRegisterBtn link">Create one here →</a>
           </p>
 
           <div class="demo-creds">
@@ -108,6 +108,11 @@
           <h2 class="auth-title">Create Account</h2>
           <p class="auth-sub">Start your financial journey today</p>
 
+          <div class="auth-top-switch">
+             <span>Already have an account?</span>
+             <a href="#" class="goToLoginBtn link">Sign in here</a>
+          </div>
+
           <div id="registerError" class="alert alert-error hidden"></div>
           <div id="registerSuccess" class="alert alert-success hidden"></div>
 
@@ -155,7 +160,7 @@
 
           <p class="auth-switch">
             Already have an account?
-            <a href="#" id="goToLogin" class="link">Sign in →</a>
+            <a href="#" class="goToLoginBtn link">Sign in now →</a>
           </p>
         </div>
 
@@ -444,26 +449,75 @@
 
       <!-- ANALYTICS PAGE -->
       <div id="page-analytics" class="page">
+        <!-- Analytics Header & Filter -->
+        <div class="analytics-toolbar">
+          <div class="toolbar-info">
+            <h3 class="section-title">📊 Visual Insights</h3>
+            <p class="muted">Track your financial progress over time</p>
+          </div>
+          <div class="analytics-filters">
+            <label class="form-label" for="analyticsRange" style="margin-bottom: 0;">Time Range:</label>
+            <select id="analyticsRange" class="filter-select">
+              <option value="3">Last 3 Months</option>
+              <option value="6" selected>Last 6 Months</option>
+              <option value="12">Last 12 Months</option>
+              <option value="year">Current Year</option>
+            </select>
+          </div>
+        </div>
+
         <div class="analytics-grid">
+          <!-- Row 1: Monthly Spending Comparison -->
           <div class="chart-card glass-card full-width">
             <div class="chart-header">
-              <h3 class="chart-title">📈 Spending Trends</h3>
-              <div class="chart-badge">Last 30 days</div>
+              <div class="header-info">
+                <h3 class="chart-title">📉 Monthly Spending Trends</h3>
+                <p class="muted">Total expenses compared month-over-month</p>
+              </div>
+              <div class="chart-badge">Spending Profile</div>
             </div>
-            <canvas id="trendsChart" height="120"></canvas>
+            <div class="chart-container-lg">
+              <canvas id="monthlySpendingChart"></canvas>
+            </div>
           </div>
+
+          <!-- Row 2: Category Pie & Income vs Expenses -->
           <div class="chart-card glass-card">
             <div class="chart-header">
-              <h3 class="chart-title">🗂 Category Breakdown</h3>
+               <div class="header-info">
+                <h3 class="chart-title">🍕 Spending by Category</h3>
+                <p class="muted">Where your money goes</p>
+              </div>
             </div>
-            <canvas id="categoryBarChart" height="200"></canvas>
+            <div class="donut-chart-container small">
+              <canvas id="analyticsCategoryPie"></canvas>
+            </div>
+            <div class="chart-legend-grid" id="analyticsPieLegend"></div>
           </div>
+
           <div class="chart-card glass-card">
             <div class="chart-header">
-              <h3 class="chart-title">📊 Budget vs Actual</h3>
+              <div class="header-info">
+                <h3 class="chart-title">⚖️ Income vs Expenses</h3>
+                <p class="muted">Monthly cash flow comparison</p>
+              </div>
             </div>
-            <div class="stat-list" id="analyticsStatList">
-              <p class="muted">Loading data...</p>
+            <div class="chart-container-sm">
+              <canvas id="incomeVsExpenseChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Row 3: Budget vs Actual Summary -->
+          <div class="chart-card glass-card full-width">
+            <div class="chart-header">
+              <div class="header-info">
+                <h3 class="chart-title">📊 Budget vs Actual Summary</h3>
+                <p class="muted">Target spending vs reality for selected period</p>
+              </div>
+            </div>
+            <div id="analyticsSummaryRow" class="analytics-summary-row">
+               <!-- Dynamic stats will be injected here -->
+               <p class="muted">Loading analytics data...</p>
             </div>
           </div>
         </div>

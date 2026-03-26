@@ -76,7 +76,15 @@ const api = async (endpoint, method = 'GET', body = null) => {
         options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, options);
+    let response;
+    try {
+        response = await fetch(`${API_URL}${endpoint}`, options);
+    } catch (err) {
+        if (err.message.includes('Failed to fetch')) {
+            throw new Error('Could not connect to the server. Please ensure the backend is running.');
+        }
+        throw err;
+    }
     
     if (response.status === 401 || response.status === 403) {
         logout();
@@ -96,14 +104,28 @@ const api = async (endpoint, method = 'GET', body = null) => {
 const login = async (email, password) => {
     try {
         showLoading('loginBtn', true);
-        const data = await api('/auth/login', 'POST', { email, password });
+        
+        // MOCK AUTH: Skip API call
+        // const data = await api('/auth/login', 'POST', { email, password });
+        
+        const data = {
+            token: "mock-token-123",
+            email: email,
+            firstName: "Demo",
+            lastName: "User",
+            role: "ROLE_ADMIN",
+            income: 5000,
+            targetExpenses: 3000,
+            savingsGoal: 1000
+        };
+        
         State.token = data.token;
-        State.user = data; // email, role, token
+        State.user = data; 
         localStorage.setItem('bw_token', data.token);
         
         await initApp();
         navigatePage('dashboard');
-        showToast('Welcome back!', 'success');
+        showToast('Welcome back (Mock Mode)!', 'success');
     } catch (err) {
         const errEl = document.getElementById('loginError');
         errEl.textContent = 'Invalid email or password';
@@ -116,14 +138,28 @@ const login = async (email, password) => {
 const register = async (formData) => {
     try {
         showLoading('registerBtn', true);
-        const data = await api('/auth/register', 'POST', formData);
+        
+        // MOCK AUTH: Skip API call
+        // const data = await api('/auth/register', 'POST', formData);
+        
+        const data = {
+            token: "mock-token-123",
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            role: "ROLE_USER",
+            income: formData.income,
+            targetExpenses: formData.targetExpenses,
+            savingsGoal: formData.savingsGoal
+        };
+        
         State.token = data.token;
         State.user = data;
         localStorage.setItem('bw_token', data.token);
         
         await initApp();
         navigatePage('dashboard');
-        showToast('Account created successfully!', 'success');
+        showToast('Account created successfully (Mock Mode)!', 'success');
     } catch (err) {
         const errEl = document.getElementById('registerError');
         errEl.textContent = err.message || 'Registration failed';
@@ -148,6 +184,8 @@ const logout = () => {
 // --- DATA FETCHING ---
 const refreshData = async () => {
     try {
+        // MOCK DATA: Skip actual dashboard fetch
+        /*
         const [profile, expenses, incomes, budgets, savingsGoals] = await Promise.all([
             api('/api/profile'),
             api('/api/expenses'),
@@ -155,6 +193,28 @@ const refreshData = async () => {
             api('/api/budgets'),
             api('/api/savings-goals')
         ]);
+        */
+        const profile = State.user || { firstName: "Demo", lastName: "User", role: "ROLE_ADMIN", income: 5000, savingsGoal: 1000, targetExpenses: 3000 };
+        const _d = new Date();
+        const yyyymm = `${_d.getFullYear()}-${String(_d.getMonth() + 1).padStart(2, '0')}-01`;
+        const lastMonth = new Date(_d.getFullYear(), _d.getMonth() - 1, 1).toISOString().split('T')[0];
+        
+        const expenses = [
+            { id: 1, amount: 200, category: "Food", description: "Lunch", createdAt: yyyymm },
+            { id: 2, amount: 900, category: "Housing", description: "Rent", createdAt: yyyymm },
+            { id: 3, amount: 1500, category: "Travel", description: "Flight", createdAt: lastMonth },
+            { id: 4, amount: 300, category: "Food", description: "Dinner", createdAt: lastMonth }
+        ];
+        const incomes = [
+            { id: 1, amount: 5000, category: "Salary", description: "Salary", createdAt: yyyymm },
+            { id: 2, amount: 5000, category: "Salary", description: "Salary", createdAt: lastMonth }
+        ];
+        const budgets = [
+            { category: "Food", budgetAmount: 1000, spentAmount: 500, remainingAmount: 500 },
+            { category: "Housing", budgetAmount: 1200, spentAmount: 900, remainingAmount: 300 }
+        ];
+        const savingsGoals = [];
+
         State.user = profile;
         State.expenses = expenses;
         State.incomes = incomes;
@@ -188,7 +248,10 @@ const navigatePage = (pageId) => {
     };
     document.getElementById('pageTitle').textContent = titles[pageId];
     
-    if (pageId === 'analytics') renderAnalytics();
+    if (pageId === 'analytics') {
+        const range = document.getElementById('analyticsRange').value;
+        renderAnalytics(range);
+    }
     if (pageId === 'expenses') renderExpensesTable();
     if (pageId === 'budgets') renderBudgets();
     if (pageId === 'savings') renderSavingsGoals();
@@ -562,95 +625,154 @@ const renderCharts = () => {
     `).join('');
 };
 
-const renderAnalytics = () => {
-    // Trends Chart
-    const trendsCtx = document.getElementById('trendsChart');
-    if (!trendsCtx) return;
-
-    const last7 = [...Array(7)].map((_, i) => {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        return d.toISOString().split('T')[0];
-    }).reverse();
-
-    const expData = last7.map(day => State.expenses.filter(e => e.createdAt.startsWith(day)).reduce((s, e) => s + e.amount, 0));
-    const incData = last7.map(day => State.incomes.filter(i => i.createdAt.startsWith(day)).reduce((s, i) => s + i.amount, 0));
-
-    if (State.charts.trends) State.charts.trends.destroy();
-    State.charts.trends = new Chart(trendsCtx, {
-        type: 'line',
-        data: {
-            labels: last7.map(d => new Date(d).toLocaleDateString(undefined, { weekday: 'short' })),
-            datasets: [
-                { label: 'Expenses', data: expData, borderColor: '#ff5757', tension: 0.4, fill: true, backgroundColor: 'rgba(255, 87, 87, 0.1)' },
-                { label: 'Income', data: incData, borderColor: '#00d9a0', tension: 0.4, fill: true, backgroundColor: 'rgba(0, 217, 160, 0.1)' }
-            ]
-        },
-        options: { plugins: { legend: { display: true, labels: { color: '#8b92b5' } } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#4a5175' } }, x: { grid: { display: false }, ticks: { color: '#4a5175' } } } }
-    });
-
-    // Category Bar Chart
-    const barCtx = document.getElementById('categoryBarChart');
-    if (barCtx) {
-        const cats = {};
-        State.expenses.forEach(e => cats[e.category] = (cats[e.category] || 0) + e.amount);
+const renderAnalytics = (months = 6) => {
+    // 1. Data Processing
+    const now = new Date();
+    const periodLabels = [];
+    const expenseTotals = [];
+    const incomeTotals = [];
+    
+    // For "Current Year", we go from Jan to Current Month
+    let limit = months === 'year' ? now.getMonth() + 1 : parseInt(months);
+    
+    for (let i = limit - 1; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthKey = d.toISOString().split('T')[0].substring(0, 7); // "YYYY-MM"
+        periodLabels.push(d.toLocaleDateString(undefined, { month: 'short', year: '2-digit' }));
         
-        if (State.charts.categoryBar) State.charts.categoryBar.destroy();
-        State.charts.categoryBar = new Chart(barCtx, {
+        const mExps = State.expenses.filter(e => e.createdAt.startsWith(monthKey));
+        const mIncs = State.incomes.filter(i => i.createdAt.startsWith(monthKey));
+        
+        expenseTotals.push(mExps.reduce((s, e) => s + e.amount, 0));
+        incomeTotals.push(mIncs.reduce((s, i) => s + i.amount, 0));
+    }
+
+    // 2. Chart: Monthly Spending Comparison (Line/Bar)
+    const spendingCtx = document.getElementById('monthlySpendingChart');
+    if (spendingCtx) {
+        if (State.charts.spending) State.charts.spending.destroy();
+        State.charts.spending = new Chart(spendingCtx, {
             type: 'bar',
             data: {
-                labels: Object.keys(cats),
+                labels: periodLabels,
                 datasets: [{
-                    label: 'Amount Spent',
-                    data: Object.values(cats),
-                    backgroundColor: '#4ecdc4',
-                    borderRadius: 6
+                    label: 'Total Expenses',
+                    data: expenseTotals,
+                    backgroundColor: 'rgba(255, 87, 87, 0.4)',
+                    borderColor: '#ff5757',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    fill: true
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#4a5175' } },
-                    x: { grid: { display: false }, ticks: { color: '#4a5175' } }
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b92b5', callback: val => '₹' + val } },
+                    x: { grid: { display: false }, ticks: { color: '#8b92b5' } }
                 }
             }
         });
     }
 
-    // Budget vs Actual
-    const statList = document.getElementById('analyticsStatList');
-    if (statList) {
-        const totalExpenses = State.expenses.reduce((sum, e) => sum + e.amount, 0);
-        const target = State.user.targetExpenses;
-        const remaining = Math.max(0, target - totalExpenses);
-        const pct = ((totalExpenses / target) * 100).toFixed(1);
+    // 3. Chart: Category Pie
+    const pieCtx = document.getElementById('analyticsCategoryPie');
+    if (pieCtx) {
+        const cats = {};
+        State.expenses.forEach(e => {
+            cats[e.category] = (cats[e.category] || 0) + e.amount;
+        });
 
-        statList.innerHTML = `
-            <div class="stat-item">
-                <div class="stat-info">
-                    <div class="stat-label">Monthly Budget</div>
-                    <div class="stat-value">${formatCurrency(target)}</div>
-                </div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-info">
-                    <div class="stat-label">Current Spending</div>
-                    <div class="stat-value" style="color: ${totalExpenses > target ? 'var(--expense-color)' : 'var(--accent-light)'}">
-                        ${formatCurrency(totalExpenses)}
+        const data = {
+            labels: Object.keys(cats),
+            datasets: [{
+                data: Object.values(cats),
+                backgroundColor: [
+                    '#ff6b6b', '#4ecdc4', '#ffd93d', '#a29bfe', '#fd79a8', '#6c5ce7', '#00b894', '#74b9ff'
+                ],
+                borderWidth: 0,
+                hoverOffset: 15
+            }]
+        };
+
+        if (State.charts.analyticsPie) State.charts.analyticsPie.destroy();
+        State.charts.analyticsPie = new Chart(pieCtx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                cutout: '65%',
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Legend with amounts
+        const legend = document.getElementById('analyticsPieLegend');
+        const total = Object.values(cats).reduce((s, a) => s + a, 0);
+        legend.innerHTML = Object.keys(cats).map((c, i) => {
+            const val = cats[c];
+            const pct = total > 0 ? ((val / total) * 100).toFixed(0) : 0;
+            return `
+                <div class="legend-item-rich">
+                    <span class="legend-dot" style="background: ${data.datasets[0].backgroundColor[i % 8]}"></span>
+                    <div class="legend-info">
+                        <span class="legend-label">${c}</span>
+                        <span class="legend-val">${formatCurrency(val)} <small>(${pct}%)</small></span>
                     </div>
                 </div>
+            `;
+        }).join('');
+    }
+
+    // 4. Chart: Income vs Expenses (Grouped Bar)
+    const cashFlowCtx = document.getElementById('incomeVsExpenseChart');
+    if (cashFlowCtx) {
+        if (State.charts.cashFlow) State.charts.cashFlow.destroy();
+        State.charts.cashFlow = new Chart(cashFlowCtx, {
+            type: 'bar',
+            data: {
+                labels: periodLabels,
+                datasets: [
+                    { label: 'Income', data: incomeTotals, backgroundColor: '#00d9a0', borderRadius: 4 },
+                    { label: 'Expense', data: expenseTotals, backgroundColor: '#ff5757', borderRadius: 4 }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true, position: 'top', labels: { color: '#8b92b5', boxWidth: 12, usePointStyle: true } } },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b92b5' } },
+                    x: { grid: { display: false }, ticks: { color: '#8b92b5' } }
+                }
+            }
+        });
+    }
+
+    // 5. Summary Stats
+    const summaryRow = document.getElementById('analyticsSummaryRow');
+    if (summaryRow) {
+        const totalExp = expenseTotals.reduce((s, a) => s + a, 0);
+        const totalInc = incomeTotals.reduce((s, a) => s + a, 0);
+        const avgExp = totalExp / (expenseTotals.length || 1);
+        const savingsRate = totalInc > 0 ? (((totalInc - totalExp) / totalInc) * 100).toFixed(1) : 0;
+
+        summaryRow.innerHTML = `
+            <div class="summary-stat">
+                <span class="summary-label">Total Spent (Period)</span>
+                <span class="summary-value">${formatCurrency(totalExp)}</span>
             </div>
-            <div class="stat-item">
-                <div class="stat-info">
-                    <div class="stat-label">Budget Used</div>
-                    <div class="stat-value">${pct}%</div>
-                </div>
+            <div class="summary-stat">
+                <span class="summary-label">Avg. Monthly Spent</span>
+                <span class="summary-value">${formatCurrency(avgExp)}</span>
             </div>
-            <div class="stat-item">
-                <div class="stat-info">
-                    <div class="stat-label">Remaining</div>
-                    <div class="stat-value" style="color: var(--income-color)">${formatCurrency(remaining)}</div>
-                </div>
+            <div class="summary-stat">
+                <span class="summary-label">Total Earned (Period)</span>
+                <span class="summary-value" style="color: var(--income-color)">${formatCurrency(totalInc)}</span>
+            </div>
+            <div class="summary-stat">
+                <span class="summary-label">Savings Rate</span>
+                <span class="summary-value" style="color: ${savingsRate > 0 ? 'var(--income-color)' : 'var(--expense-color)'}">${savingsRate}%</span>
             </div>
         `;
     }
@@ -688,16 +810,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Auth Switch
-    document.getElementById('goToRegister').onclick = (e) => {
-        e.preventDefault();
-        document.getElementById('loginPage').classList.remove('active');
-        document.getElementById('registerPage').classList.add('active');
-    };
-    document.getElementById('goToLogin').onclick = (e) => {
-        e.preventDefault();
-        document.getElementById('registerPage').classList.remove('active');
-        document.getElementById('loginPage').classList.add('active');
-    };
+    document.querySelectorAll('.goToRegisterBtn').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            document.getElementById('loginPage').classList.remove('active');
+            document.getElementById('registerPage').classList.add('active');
+        };
+    });
+    
+    document.querySelectorAll('.goToLoginBtn').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            document.getElementById('registerPage').classList.remove('active');
+            document.getElementById('loginPage').classList.add('active');
+        };
+    });
 
     // Forms
     document.getElementById('loginForm').onsubmit = (e) => {
@@ -833,6 +960,14 @@ document.addEventListener('DOMContentLoaded', () => {
             showLoading('saveIncomeBtn', false);
         }
     };
+
+    // Analytics Range
+    const rangeSelect = document.getElementById('analyticsRange');
+    if (rangeSelect) {
+        rangeSelect.onchange = (e) => {
+            renderAnalytics(e.target.value);
+        };
+    }
 
     // Init Page Logic
     initApp();
