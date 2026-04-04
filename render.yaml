@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: budgetwise-app
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfile: ./Dockerfile
+    dockerContext: ./
+    healthCheckPath: /health
+    port: 8081
+    
+    # Environment variables
+    envVars:
+      - key: MONGODB_URI
+        scope: run
+        sync: false
+      - key: JWT_SECRET
+        scope: run
+        sync: false
+      - key: PORT
+        value: 8081
+        scope: run
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+        scope: run
+
+    # Build command (optional - uses Dockerfile)
+    # buildCommand: mvn clean package
+
+    # Start command (can be overridden if needed)
+    # startCommand: java -jar budgetwise/target/budgetwise-expense-tracker-1.0.0.jar
+
+databases:
+  - name: budgetwise-db
+    databaseName: budgetwise
+    plan: free
+    region: oregon
+    ipAllowList: []  # Allow all by default; restrict as needed
