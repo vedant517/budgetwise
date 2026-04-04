@@ -244,7 +244,9 @@ const navigatePage = (pageId) => {
         budgets: 'Monthly Budgets',
         savings: 'Savings Goals',
         analytics: 'Analytics',
-        profile: 'User Profile'
+        profile: 'User Profile',
+        export: 'Export & Backup',
+        forum: 'Community Forum'
     };
     document.getElementById('pageTitle').textContent = titles[pageId];
     
@@ -255,6 +257,7 @@ const navigatePage = (pageId) => {
     if (pageId === 'expenses') renderExpensesTable();
     if (pageId === 'budgets') renderBudgets();
     if (pageId === 'savings') renderSavingsGoals();
+    if (pageId === 'forum') renderForum();
 };
 
 // --- UI UPDATES ---
@@ -972,3 +975,76 @@ document.addEventListener('DOMContentLoaded', () => {
     // Init Page Logic
     initApp();
 });
+
+// --- FORUM & EXPORT GLOBALS ---
+async function renderForum() {
+    const list = document.getElementById('forumList');
+    try {
+        const posts = await api('/api/forum');
+        if (!posts || posts.length === 0) {
+            list.innerHTML = '<div class="empty-state">No forum posts yet. Be the first to start a discussion!</div>';
+            return;
+        }
+        list.innerHTML = posts.map(post => `
+            <div class="forum-post-card glass-card" style="margin-bottom: 20px; padding: 24px;">
+                <div class="post-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <span class="badge" style="background: var(--accent-light); margin-bottom: 8px;">${post.category}</span>
+                        <h3 style="margin: 0; font-size: 20px;">${post.title}</h3>
+                    </div>
+                    <div style="text-align: right; font-size: 13px; color: var(--text-muted);">
+                        <div>By ${post.author ? post.author.firstName : 'Member'}</div>
+                        <div>${post.createdAt}</div>
+                    </div>
+                </div>
+                <p style="margin: 16px 0; line-height: 1.6;">${post.content}</p>
+                <div class="post-actions" style="display: flex; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                    <button class="btn-logout" onclick="likePost('${post.id}')" style="display: flex; align-items: center; gap: 6px;">
+                        <span>❤️</span> ${post.likedBy ? post.likedBy.length : 0}
+                    </button>
+                    <button class="btn-logout" style="display: flex; align-items: center; gap: 6px;">
+                        <span>💬</span> ${post.comments ? post.comments.length : 0}
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) {
+        list.innerHTML = '<p class="error">Failed to load forum posts.</p>';
+    }
+}
+
+async function likePost(id) {
+    try {
+        await api(`/api/forum/${id}/like`, 'POST');
+        renderForum();
+    } catch (err) {
+        showToast('Failed to like post', 'error');
+    }
+}
+
+function downloadCSV() {
+    window.location.href = '/api/export/csv';
+    showToast('Preparing CSV download...', 'info');
+}
+
+function downloadPDF() {
+    showToast('PDF Export is being prepared...', 'info');
+    setTimeout(() => {
+        window.location.href = '/api/export/csv'; // Fallback to CSV for now
+    }, 1000);
+}
+
+async function downloadBackup() {
+    try {
+        const data = await api('/api/export/backup');
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'budgetwise_backup.json';
+        a.click();
+        showToast('Backup downloaded successfully!', 'success');
+    } catch (err) {
+        showToast('Backup failed', 'error');
+    }
+}

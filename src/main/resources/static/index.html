@@ -217,6 +217,14 @@
           <span class="nav-icon">👤</span>
           <span class="nav-label">Profile</span>
         </a>
+        <a href="#" class="nav-item" data-page="export" id="nav-export">
+          <span class="nav-icon">📥</span>
+          <span class="nav-label">Export</span>
+        </a>
+        <a href="#" class="nav-item" data-page="forum" id="nav-forum">
+          <span class="nav-icon">💬</span>
+          <span class="nav-label">Forum</span>
+        </a>
       </nav>
 
       <div class="sidebar-footer">
@@ -538,7 +546,6 @@
               </div>
               <div class="profile-stat">
                 <span class="profile-stat-val" id="profileTotalSpent">₹0</span>
-
                 <span class="profile-stat-label">Total Spent</span>
               </div>
             </div>
@@ -549,17 +556,14 @@
             <div class="detail-item">
               <span class="detail-label">Monthly Income</span>
               <span class="detail-value" id="detailIncome">₹0</span>
-
             </div>
             <div class="detail-item">
               <span class="detail-label">Savings Goal</span>
               <span class="detail-value" id="detailSavings">₹0</span>
-
             </div>
             <div class="detail-item">
               <span class="detail-label">Target Expenses</span>
               <span class="detail-value" id="detailTarget">₹0</span>
-
             </div>
             <div class="detail-item">
               <span class="detail-label">Account Status</span>
@@ -576,6 +580,42 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- EXPORT & BACKUP PAGE -->
+      <div id="page-export" class="page">
+        <div class="export-hero section-card glass-card">
+           <h2 class="section-title">Export & Backup Center</h2>
+           <p class="muted">Download your data or back it up to the cloud.</p>
+        </div>
+        <div class="export-grid">
+           <div class="chart-card glass-card">
+              <h3 class="chart-title">📥 Export Data</h3>
+              <p class="muted">Download your financial records</p>
+              <div class="export-actions">
+                 <button class="btn btn-primary btn-full" onclick="downloadCSV()">Export as CSV</button>
+                 <button class="btn btn-ghost btn-full" style="margin-top: 10px;" onclick="downloadPDF()">Export as PDF</button>
+              </div>
+           </div>
+           <div class="chart-card glass-card">
+              <h3 class="chart-title">☁️ Cloud Backup</h3>
+              <p class="muted">Save your data for safekeeping</p>
+              <div class="export-actions">
+                 <button class="btn btn-primary btn-full" onclick="downloadBackup()">Download JSON Backup</button>
+              </div>
+           </div>
+        </div>
+      </div>
+
+      <!-- FORUM PAGE -->
+      <div id="page-forum" class="page">
+         <div class="forum-header">
+            <h2 class="section-title">Community Forum</h2>
+            <button class="btn btn-primary" id="newPostBtn">+ New Post</button>
+         </div>
+         <div id="forumList" class="forum-posts-list">
+            <!-- Posts loaded here -->
+         </div>
       </div>
     </main>
   </div>
