@@ -584,24 +584,57 @@
 
       <!-- EXPORT & BACKUP PAGE -->
       <div id="page-export" class="page">
-        <div class="export-hero section-card glass-card">
-           <h2 class="section-title">Export & Backup Center</h2>
-           <p class="muted">Download your data or back it up to the cloud.</p>
+        <div class="section-card glass-card export-card-hero">
+           <h2 class="section-title" style="font-size: 2rem; font-weight: 800;">Export & Backup Center</h2>
+           <p class="muted">Download your financial data in multiple formats or back it up to the cloud for safekeeping.</p>
         </div>
         <div class="export-grid">
+           <!-- EXPORT CARD -->
            <div class="chart-card glass-card">
-              <h3 class="chart-title">📥 Export Data</h3>
-              <p class="muted">Download your financial records</p>
-              <div class="export-actions">
-                 <button class="btn btn-primary btn-full" onclick="downloadCSV()">Export as CSV</button>
-                 <button class="btn btn-ghost btn-full" style="margin-top: 10px;" onclick="downloadPDF()">Export as PDF</button>
+              <div class="export-section-title">
+                  <div class="export-icon-box" style="background: rgba(108, 99, 255, 0.2); color: #8b84ff;">📂</div>
+                  <div>
+                      <h3 style="margin:0; font-size: 1.25rem;">Export Data</h3>
+                      <p class="muted">Download your financial records</p>
+                  </div>
+              </div>
+              
+              <div class="form-group" style="margin: 20px 0;">
+                  <label class="form-label">DATA TO EXPORT</label>
+                  <select class="form-input">
+                      <option>📊 All Transactions</option>
+                  </select>
+              </div>
+
+              <div class="export-actions" style="display: flex; flex-direction: column; gap: 12px;">
+                 <button class="btn btn-export-csv btn-full" onclick="downloadCSV()">
+                    <span>📄</span> Export as CSV
+                 </button>
+                 <button class="btn btn-export-pdf btn-full" onclick="downloadPDF()">
+                    <span>📝</span> Export as PDF
+                 </button>
               </div>
            </div>
+
+           <!-- CLOUD BACKUP CARD -->
            <div class="chart-card glass-card">
-              <h3 class="chart-title">☁️ Cloud Backup</h3>
-              <p class="muted">Save your data for safekeeping</p>
-              <div class="export-actions">
-                 <button class="btn btn-primary btn-full" onclick="downloadBackup()">Download JSON Backup</button>
+              <div class="export-section-title">
+                  <div class="export-icon-box" style="background: rgba(255, 181, 67, 0.2); color: #ffb543;">☁️</div>
+                  <div>
+                      <h3 style="margin:0; font-size: 1.25rem;">Cloud Backup</h3>
+                      <p class="muted">Save your data to the cloud</p>
+                  </div>
+              </div>
+              <p class="muted" style="margin-bottom: 20px;">Download your backup file first, then upload it to your preferred cloud storage service for safekeeping.</p>
+              
+              <div class="export-actions" style="display: flex; flex-direction: column; gap: 12px;">
+                 <button class="btn btn-export-json btn-full" onclick="downloadBackup()">
+                    <span>💾</span> Download Backup (JSON)
+                 </button>
+                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                     <button class="btn btn-ghost" style="border-radius: 20px; color: #74b9ff;"><span style="color: #6c5ce7;">●</span> Google Drive</button>
+                     <button class="btn btn-ghost" style="border-radius: 20px; color: #a29bfe;"><span style="color: #0984e3;">♦</span> Dropbox</button>
+                 </div>
               </div>
            </div>
         </div>
@@ -609,12 +642,28 @@
 
       <!-- FORUM PAGE -->
       <div id="page-forum" class="page">
-         <div class="forum-header">
-            <h2 class="section-title">Community Forum</h2>
-            <button class="btn btn-primary" id="newPostBtn">+ New Post</button>
+         <div class="forum-header-wrap">
+            <div class="forum-subheader">
+                <span>💬</span> Financial Tips Forum
+                <button class="btn btn-primary" id="newPostBtn" style="margin-left: auto; background: linear-gradient(135deg, #6c5ce7, #a29bfe); box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);">
+                    🔥 New Post
+                </button>
+            </div>
+            <p class="forum-desc">Share tips, ask questions, and learn from the community</p>
          </div>
+
+         <div class="forum-controls">
+            <select class="filter-select" style="width: 240px; background: rgba(255,255,255,0.05);">
+                <option>All Topics</option>
+            </select>
+            <div class="search-box" style="flex: 1;">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search posts..." />
+            </div>
+         </div>
+
          <div id="forumList" class="forum-posts-list">
-            <!-- Posts loaded here -->
+            <!-- Dynamic Posts with rich cards will be injected here -->
          </div>
       </div>
     </main>

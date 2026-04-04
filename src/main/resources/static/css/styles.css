@@ -386,7 +386,15 @@ select.form-input option { background: var(--bg-surface); color: var(--text-prim
   color: var(--accent-light);
 }
 .nav-item.active::before { transform: scaleY(1); }
-.nav-icon { font-size: 1.2rem; }
+.nav-icon { font-size: 1.2rem; transition: var(--transition); }
+#nav-dashboard .nav-icon { color: #6c63ff; }
+#nav-expenses  .nav-icon { color: #00d9a0; }
+#nav-budgets   .nav-icon { color: #4ecdc4; }
+#nav-savings   .nav-icon { color: #fd79a8; }
+#nav-analytics .nav-icon { color: #a29bfe; }
+#nav-export    .nav-icon { color: #ff5757; }
+#nav-forum     .nav-icon { color: #f0f2ff; }
+#nav-profile   .nav-icon { color: #6c5ce7; }
 
 .sidebar-footer {
   padding: 1rem 1.25rem;
@@ -903,4 +911,90 @@ select.form-input option { background: var(--bg-surface); color: var(--text-prim
   .kpi-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
   .expenses-toolbar { flex-wrap: wrap; }
+}
+
+/* ============================================================
+   FORUM & EXPORT SPECIAL STYLES
+   ============================================================ */
+
+/* Forum Header & Filters */
+.forum-header-wrap {
+  margin-bottom: 2rem;
+}
+.forum-subheader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-top: 1rem;
+}
+.forum-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.forum-controls {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.forum-post-card {
+  border-left: 4px solid transparent;
+  transition: all var(--transition);
+}
+.forum-post-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.08);
+}
+
+.badge-tag {
+  font-size: 0.65rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tag-budgeting { background: rgba(255, 217, 61, 0.15); color: #ffd93d; border: 1px solid rgba(255, 217, 61, 0.3); }
+.tag-investing { background: rgba(0, 217, 160, 0.15); color: #00d9a0; border: 1px solid rgba(0, 217, 160, 0.3); }
+
+/* Export Center Grid */
+.export-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.export-card-hero {
+  padding: 3rem 2rem;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(16, 21, 42, 0.8), rgba(22, 29, 53, 0.8));
+}
+
+.btn-export-csv { background: #00d9a0; color: #000; font-weight: 800; }
+.btn-export-pdf { background: #ff5757; color: #fff; font-weight: 800; }
+.btn-export-json { background: #7d5fff; color: #fff; font-weight: 800; }
+
+.export-section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.export-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
 }

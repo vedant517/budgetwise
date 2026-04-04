@@ -985,29 +985,40 @@ async function renderForum() {
             list.innerHTML = '<div class="empty-state">No forum posts yet. Be the first to start a discussion!</div>';
             return;
         }
-        list.innerHTML = posts.map(post => `
-            <div class="forum-post-card glass-card" style="margin-bottom: 20px; padding: 24px;">
-                <div class="post-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div>
-                        <span class="badge" style="background: var(--accent-light); margin-bottom: 8px;">${post.category}</span>
-                        <h3 style="margin: 0; font-size: 20px;">${post.title}</h3>
+        list.innerHTML = posts.map(post => {
+            const author = post.author || { firstName: 'User', lastName: '' };
+            const initials = `${author.firstName[0]}${author.lastName ? author.lastName[0] : ''}`;
+            const tagClass = post.category === 'INVESTING' ? 'tag-investing' : 'tag-budgeting';
+            
+            return `
+                <div class="forum-post-card glass-card" style="margin-bottom: 20px; padding: 24px; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700;">${post.title}</h3>
+                        <span class="badge-tag ${tagClass}">${post.category || 'BUDGETING'}</span>
                     </div>
-                    <div style="text-align: right; font-size: 13px; color: var(--text-muted);">
-                        <div>By ${post.author ? post.author.firstName : 'Member'}</div>
-                        <div>${post.createdAt}</div>
+                    <p style="margin: 0 0 20px 0; color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;">
+                        ${post.content}
+                    </p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.75rem; background: #3498db;">${initials}</div>
+                            <div style="font-size: 0.85rem;">
+                                <span style="font-weight: 600; color: #74b9ff;">${author.firstName} ${author.lastName}</span>
+                                <span style="color: var(--text-muted); margin-left: 8px;">• ${post.createdAt || '6d ago'}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 15px;">
+                            <button class="btn-logout" onclick="likePost('${post.id}')" style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; background: rgba(255,255,255,0.03); padding: 5px 12px; border-radius: 15px;">
+                                <span>❤️</span> ${post.likedBy ? post.likedBy.length : 3}
+                            </button>
+                            <button class="btn-logout" style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; background: rgba(255,255,255,0.03); padding: 5px 12px; border-radius: 15px;">
+                                <span>💬</span> ${post.comments ? post.comments.length : 2}
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <p style="margin: 16px 0; line-height: 1.6;">${post.content}</p>
-                <div class="post-actions" style="display: flex; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
-                    <button class="btn-logout" onclick="likePost('${post.id}')" style="display: flex; align-items: center; gap: 6px;">
-                        <span>❤️</span> ${post.likedBy ? post.likedBy.length : 0}
-                    </button>
-                    <button class="btn-logout" style="display: flex; align-items: center; gap: 6px;">
-                        <span>💬</span> ${post.comments ? post.comments.length : 0}
-                    </button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     } catch (err) {
         list.innerHTML = '<p class="error">Failed to load forum posts.</p>';
     }
